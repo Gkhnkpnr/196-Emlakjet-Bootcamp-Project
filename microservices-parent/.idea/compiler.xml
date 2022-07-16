@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -19,7 +20,7 @@
       <module name="advertisement-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
-      <module name="microservices-parent" options="" />
+      <module name="microservices-parent" options="-parameters" />
       <module name="report-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
