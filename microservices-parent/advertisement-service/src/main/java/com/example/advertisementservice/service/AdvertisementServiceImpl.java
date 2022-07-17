@@ -7,6 +7,7 @@ import com.example.advertisementservice.repository.AdvertisementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,17 +25,38 @@ public class AdvertisementServiceImpl implements AdvertisementService{
 
     @Override
     public void createAdvertisement(AdvertisementRequest advertisementRequest) {
-
+        Advertisement advertisement = Advertisement.builder()
+                .title(advertisementRequest.getTitle())
+                .description(advertisementRequest.getDescription())
+                .createdAt(LocalDateTime.now())
+                .isActive(false)
+                .build();
+        advertisementRepository.save(advertisement);
     }
 
     @Override
-    public void updateAdvertisement(AdvertisementUpdateRequest advertisementUpdateRequest) {
-
+    public void updateAdvertisement(AdvertisementUpdateRequest advertisementUpdateRequest,Long id) {
+        Advertisement advertisement = advertisementRepository.findById(id).get();
+        advertisement.setUpdatedAt(LocalDateTime.now());
+        advertisement.setTitle(advertisementUpdateRequest.getTitle());
+        advertisement.setDescription(advertisementUpdateRequest.getDescription());
+        advertisement.setViewCount(advertisement.getViewCount()+1);
+        advertisement.setIsActive(advertisementUpdateRequest.getIsActive());
+        advertisementRepository.save(advertisement);
     }
 
     @Override
     public void approveAdvertisement(Long advertisementId) {
+        Advertisement advertisement = advertisementRepository.findById(advertisementId).get();
+        advertisement.setIsActive(true);
+        advertisementRepository.save(advertisement);
+    }
 
+    @Override
+    public void rejectAdvertisement(Long advertisementId) {
+        Advertisement advertisement = advertisementRepository.findById(advertisementId).get();
+        advertisement.setIsActive(false);
+        advertisementRepository.save(advertisement);
     }
 
     @Override

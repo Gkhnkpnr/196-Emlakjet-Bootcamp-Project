@@ -20,7 +20,10 @@ public class Advertisement {
     private Long id;
     private String title;
     private String description;
-    private Integer viewCount;
-    private Boolean isActive;
+    @Builder.Default
+    private Integer viewCount=0;
+    @Builder.Default
+    private Boolean isActive=false;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

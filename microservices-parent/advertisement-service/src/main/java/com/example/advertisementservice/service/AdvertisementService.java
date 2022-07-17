@@ -10,8 +10,9 @@ import java.util.Optional;
 public interface AdvertisementService {
     Optional<Advertisement> findById(Long advertisementId);
     void createAdvertisement(AdvertisementRequest advertisementRequest);
-    void updateAdvertisement(AdvertisementUpdateRequest advertisementUpdateRequest);
+    void updateAdvertisement(AdvertisementUpdateRequest advertisementUpdateRequest, Long id);
     void approveAdvertisement(Long advertisementId);
+    void rejectAdvertisement(Long advertisementId);
     List<Advertisement> findLast10ByIsActiveIsTrue();
     List<Advertisement> findAllByIsActiveIsFalse();
 }
