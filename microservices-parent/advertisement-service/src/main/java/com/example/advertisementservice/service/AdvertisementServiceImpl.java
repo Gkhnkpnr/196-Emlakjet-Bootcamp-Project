@@ -5,6 +5,8 @@ import com.example.advertisementservice.dto.AdvertisementUpdateRequest;
 import com.example.advertisementservice.entity.Advertisement;
 import com.example.advertisementservice.repository.AdvertisementRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,6 +18,8 @@ import java.util.Optional;
 public class AdvertisementServiceImpl implements AdvertisementService{
 
     private final AdvertisementRepository advertisementRepository;
+    private final RabbitTemplate rabbitTemplate;
+    private final Queue queue;
 
 
     @Override
@@ -50,6 +54,7 @@ public class AdvertisementServiceImpl implements AdvertisementService{
         Advertisement advertisement = advertisementRepository.findById(advertisementId).get();
         advertisement.setIsActive(true);
         advertisementRepository.save(advertisement);
+        rabbitTemplate.convertAndSend(queue.getName(),advertisement.toString());
     }
 
     @Override
