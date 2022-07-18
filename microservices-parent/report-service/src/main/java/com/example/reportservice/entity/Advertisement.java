@@ -1,4 +1,4 @@
-package com.example.advertisementservice.entity;
+package com.example.reportservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

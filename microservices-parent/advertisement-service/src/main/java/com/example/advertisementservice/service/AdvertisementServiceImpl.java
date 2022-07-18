@@ -1,5 +1,6 @@
 package com.example.advertisementservice.service;
 
+import com.example.advertisementservice.dto.AdvertisementQueueDto;
 import com.example.advertisementservice.dto.AdvertisementRequest;
 import com.example.advertisementservice.dto.AdvertisementUpdateRequest;
 import com.example.advertisementservice.entity.Advertisement;
@@ -9,6 +10,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +34,7 @@ public class AdvertisementServiceImpl implements AdvertisementService{
         Advertisement advertisement = Advertisement.builder()
                 .title(advertisementRequest.getTitle())
                 .description(advertisementRequest.getDescription())
-                .createdAt(LocalDateTime.now())
+                .createdAt(Instant.now())
                 .isActive(false)
                 .build();
         advertisementRepository.save(advertisement);
@@ -41,7 +43,7 @@ public class AdvertisementServiceImpl implements AdvertisementService{
     @Override
     public void updateAdvertisement(AdvertisementUpdateRequest advertisementUpdateRequest,Long id) {
         Advertisement advertisement = advertisementRepository.findById(id).get();
-        advertisement.setUpdatedAt(LocalDateTime.now());
+        advertisement.setUpdatedAt(Instant.now());
         advertisement.setTitle(advertisementUpdateRequest.getTitle());
         advertisement.setDescription(advertisementUpdateRequest.getDescription());
         advertisement.setViewCount(advertisement.getViewCount()+1);
@@ -54,7 +56,14 @@ public class AdvertisementServiceImpl implements AdvertisementService{
         Advertisement advertisement = advertisementRepository.findById(advertisementId).get();
         advertisement.setIsActive(true);
         advertisementRepository.save(advertisement);
-        rabbitTemplate.convertAndSend(queue.getName(),advertisement.toString());
+        AdvertisementQueueDto message = AdvertisementQueueDto.builder()
+                .id(advertisement.getId())
+                .description(advertisement.getDescription())
+                .isActive(advertisement.getIsActive())
+                .viewCount(advertisement.getViewCount())
+                .title(advertisement.getTitle())
+                .build();
+        rabbitTemplate.convertAndSend(queue.getName(),message);
     }
 
     @Override

@@ -20,7 +20,7 @@
       <module name="advertisement-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
-      <module name="microservices-parent" options="-parameters" />
+      <module name="microservices-parent" options="" />
       <module name="report-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
