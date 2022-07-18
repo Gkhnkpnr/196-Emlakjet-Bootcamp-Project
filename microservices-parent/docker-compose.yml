@@ -1,0 +1,66 @@
+version: "3.9"
+services:
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:3.8.14-management
+    container_name: 'rabbitmq'
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/mnesia/
+    networks:
+      - test-network
+
+  postgres-auth-service:
+    container_name: user-service
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_URL: jdbc:postgresql://localhost:5432/user-service
+      POSTGRES_DB: user-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5432:5432
+    networks:
+      - test-network
+    volumes:
+      - ~/.docker-conf/postgres/data1/:/var/lib/postgresql/data
+
+  postgres-advert-service:
+    container_name: advertisement-service
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_URL: jdbc:postgresql://localhost:5432/advertisement-service
+      POSTGRES_DB: advertisement
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5433:5432
+    networks:
+      - test-network
+    volumes:
+      - ~/.docker-conf/postgres/data2/:/var/lib/postgresql/data
+
+  postgres-report-service:
+    container_name: report-service
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_URL: jdbc:postgresql://localhost:5432/report-service
+      POSTGRES_DB: report-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5434:5432
+    networks:
+      - test-network
+    volumes:
+      - ~/.docker-conf/postgres/data3/:/var/lib/postgresql/data
+
+networks:
+  test-network:
+    driver: bridge
